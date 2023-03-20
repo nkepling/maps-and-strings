@@ -5,6 +5,11 @@
 ######################################################
 
 def find_substring(s, subs):
+    """
+    Find substring in string given string s and substing sub. 
+    
+    Returns: starting index of substring in longer string. 
+    """
 
     j = len(subs) # len of sub string 
 
