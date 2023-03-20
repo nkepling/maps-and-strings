@@ -69,6 +69,29 @@ def dijkstra(G:nx.MultiDiGraph,src:int,target:int) -> float | dict:
                 prev[neighbor] = u
                 heapq.heappush(Q,(alt,neighbor)) # add with priority
 
+
+class Solution():
+
+    def get_map_and_path(city:str,src_coords:tuple,target_coords:tuple,network_type="drive"):
+        """
+        Grab networkx graph from OSM then find and plot shortest path from source coordinates to target coordinates. 
+        """
+
+        ox.settings.use_cache = True
+        ox.settings.log_console = False
+        G = ox.graph_from_place(city, network_type=network_type) #grab graph
+
+        src = ox.nearest_nodes(G, src_coords[1],src_coords[0]) # get nearest nodse in graph to lat, long coordinates
+        target = ox.nearest_nodes(G, target_coords[1],target_coords[0])
+
+        dist,prev = dijkstra(G,src,target)
+        print(f"{dist} meters")
+        
+        S = trace_shortest_route(src,target,prev) #Read the shortest path from source to target and return list of node path. 
+        
+        fig, ax = ox.plot_graph_route(G, S, route_linewidth=3, node_size=0, bgcolor='k') #plot shortest path
+        fig.show()
+
    
 
 
@@ -77,9 +100,7 @@ def dijkstra(G:nx.MultiDiGraph,src:int,target:int) -> float | dict:
 
 if __name__ == "__main__":
 
-    ox.settings.use_cache = True
-    ox.settings.log_console = False
-    G = ox.graph_from_place("Denver, Colorado, USA", network_type="drive") #grab graph
+    city = "Denver, Colorado, USA"
 
     ######################
     # POINTS OF INTEREST #
@@ -93,17 +114,9 @@ if __name__ == "__main__":
     src_coords = University_of_Denver
     target_coords = Denver_International_Airport
 
-    src = ox.nearest_nodes(G, src_coords[1],src_coords[0]) # get nearest nodse in graph to lat, long coordinates
-    target = ox.nearest_nodes(G, target_coords[1],target_coords[0])
+    Solution.get_map_and_path(city,src_coords,target_coords)
 
-    dist,prev = dijkstra(G,src,target)
-    print(f"{dist} meters")
     
-    S = trace_shortest_route(src,target,prev) #Read the shortest path from source to target and return list of node path. 
-    
-    fig, ax = ox.plot_graph_route(G, S, route_linewidth=3, node_size=0, bgcolor='k') #plot shortest path
-    fig.show()
-
     ############################################################################
     # Some Checks to see if my dijkstra implementation is behaving as expected #
     ###########################################################################
