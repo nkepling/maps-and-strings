@@ -13,7 +13,7 @@ def find_substring(s, subs):
 
     j = len(subs) # len of sub string 
 
-    for ind in range(len(s)-j):
+    for ind in range(len(s)+1-j):
         S = s[ind:j+ind] 
         if S == subs:
             print(f"Substring '{S}' found at index {ind}")
